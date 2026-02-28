@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -52,7 +53,8 @@ namespace task6_Zag
 
     public record Employee(string Name, string Department, decimal Salary);
 
-   
+    public record Course(string Title, List<string> Students);
+
 
     internal class Program
     {
@@ -360,7 +362,7 @@ namespace task6_Zag
 
             /////////////////////////////////////----- Q7 -----///////////////////////////////////////
 
-            List<int> scores = [88, 92, 75, 60, 55, 80, 91, 45];
+            //List<int> scores = [88, 92, 75, 60, 55, 80, 91, 45];
 
 
             //// 1. TakeWhile score >= 70  → expected: [88, 92, 75]
@@ -395,55 +397,237 @@ namespace task6_Zag
             //    new Employee("Nada", "Engineering", 9500m)
             //};
 
-            // 1. Group by Department, print: "Engineering → Count: 3, Avg: 9000"
-            var groupByDept = employees.GroupBy(e => e.Department);
-            foreach (var g in groupByDept)
-            {
-                int count = g.Count();
-                decimal avgSalary = g.Average(e => e.Salary);
-                Console.WriteLine($"{g.Key} → Count: {count}, Avg: {avgSalary}");
+            //// 1. Group by Department, print: "Engineering → Count: 3, Avg: 9000"
+            //var groupByDept = employees.GroupBy(e => e.Department);
+            //foreach (var g in groupByDept)
+            //{
+            //    int count = g.Count();
+            //    decimal avgSalary = g.Average(e => e.Salary);
+            //    Console.WriteLine($"{g.Key} → Count: {count}, Avg: {avgSalary}");
 
-                
-            }
 
-            Console.WriteLine();
-            // 2. Find the department with the highest total salary budget
-            var highestTotalSalaryBudget = groupByDept.Select(g => new
-            {
-                Depatment = g.Key,
-                TotalSalary = g.Sum(e => e.Salary)
-            });
+            //}
 
-            foreach(var totalSalary in highestTotalSalaryBudget)
-                Console.WriteLine(totalSalary);
+            //Console.WriteLine();
+            //// 2. Find the department with the highest total salary budget
+            //var highestTotalSalaryBudget = groupByDept.Select(g => new
+            //{
+            //    Depatment = g.Key,
+            //    TotalSalary = g.Sum(e => e.Salary)
+            //});
 
-            Console.WriteLine();
-            // 3. List employees in each group ordered by Salary descending
-            foreach (var g in groupByDept)
-            {
-                Console.WriteLine($"{g.Key}:");
-                foreach (var emp in g.OrderByDescending(e => e.Salary))
-                {
-                    Console.WriteLine($"   {emp.Name}  {emp.Salary}");
-                }
-            }
+            //foreach(var totalSalary in highestTotalSalaryBudget)
+            //    Console.WriteLine(totalSalary);
+
+            //Console.WriteLine();
+            //// 3. List employees in each group ordered by Salary descending
+            //foreach (var g in groupByDept)
+            //{
+            //    Console.WriteLine($"{g.Key}:");
+            //    foreach (var emp in g.OrderByDescending(e => e.Salary))
+            //    {
+            //        Console.WriteLine($"   {emp.Name}  {emp.Salary}");
+            //    }
+            //}
 
             /////////////////////////////////////----- Q9 -----///////////////////////////////////////
 
+            //List<int> nums = [1, 2, 3, 4, 5];
+            //var query = nums.Where(n => n > 2); // ← query defined here
+            //nums.Add(10);   // ← source modified AFTER query
+            //foreach (var n in query)
+            //    Console.Write(n + " ");
 
+            //Console.WriteLine();
+            //// Q: What is printed? Why?
+            //// [3 4 5 10 ]
+            ////.ToList() من غير ما نعمل   list  عشان عندنا شرط ان الارقام تبقي اكبر من 2 وبعدين ضيف رقم 10 علي ال 
 
+            //// Q: How would using .ToList() right after .Where(...) change the result?
+            //List<int> nums0 = [1, 2, 3, 4, 5];
+            //var query0 = nums0.Where(n => n > 2).ToList();
+            ////النتيجه اتحفظت خلاص واي تعديل انت هتعمله مش هيسمع ومش هيعمل اي تاثير .ToList() هنا لما عملنا 
+            //nums0.Add(17);
+            //foreach (var n in query0)
+            //    Console.Write(n + " ");
+            //// Q: Name 3 LINQ operators that trigger immediate execution.
 
-
+            ///////////////////////-------------- Immediate Execution -----------------////////////
+            ////ToList()
+            ////ToArray()
+            ////Count()
+            ////First()
+            ////FirstOrDefault()
+            ////Last()
+            ////LastOrDefault()
+            ////Single()
+            ////Sum()
+            ////Max()
+            ////Min()
+            ////Average()
+            //Console.WriteLine();
             /////////////////////////////////////----- Q10 -----///////////////////////////////////////
 
+            //List<string> words = ["apple", "fig", "banana", "kiwi",
+            //                        "grape", "mango", "pear", "plum"];
+            //// 1. Filter words longer than 4 characters
+            //var wordsLongerThanFourCharacters = words.Where(w => w.Length > 4);
+            //foreach (var item in wordsLongerThanFourCharacters)
+            //{
+            //    Console.Write(item+ " ");
+            //}
+            //Console.WriteLine();
+            //// 2. Filter words at even indexes (0, 2, 4, 6...) using (item, index) overload
+            //var wordsAtEvenIndexes = words.Where((w, index) => index % 2 == 0);
+            //foreach (var item in wordsAtEvenIndexes)
+            //{
+            //    Console.Write(item + " ");
+            //}
+            //Console.WriteLine();
+            //// 3. Filter words that are BOTH longer than 4 chars AND at an even index
+            //var wordsLongerThanFourCharsAndEvenIndex = words.Where((w, index) => w.Length > 4 && index % 2 == 0);
+            //foreach (var item in wordsLongerThanFourCharsAndEvenIndex)
+            //{
+            //    Console.Write(item + " ");
+            //}
+            //Console.WriteLine();
+            //// 4. What is the index of "mango" in the filtered result from step 1?
+            //int index = 0;
+            //foreach (var item in wordsLongerThanFourCharacters)
+            //{
+            //    if(item == "mango")
+            //        Console.WriteLine($"the index of \"mango\" is {index}");
+            //    index++;
+            //}
+            //Console.WriteLine();
 
+            //// طريقه تانيه :- 
+            //var theIndexOfMango = words.IndexOf("mango");
+            //Console.WriteLine($"the index of \"mango\" is {theIndexOfMango}");
+            //Console.WriteLine();
 
             /////////////////////////////////////----- Q11 -----///////////////////////////////////////
 
+            List<Course> courses =
+            [
+                new("C# Basics",["Ali", "Sara", "Omar"]),
+                new("LINQ Mastery", ["Sara", "Mona", "Ali"]),
+                new("ASP.NET Core", ["Yara", "Omar", "Karim"]),
+            ];
 
+            //// 1. Flatten to a single list of ALL student names (with duplicates)
+            //var studentNames = courses.SelectMany(s => s.Students);
+            //foreach (var student in studentNames)
+            //    Console.WriteLine(student);
+            //Console.WriteLine();
+            //// 2. Get a distinct list of all student names
+            //var studentNamesDistinct = courses.SelectMany(s => s.Students).Distinct();
+            //foreach (var student in studentNamesDistinct)
+            //    Console.WriteLine(student);
+            //Console.WriteLine();
+            //// 3. Find students who appear in MORE THAN ONE course
+            //var studentNamesAppearMoreThanOne = courses
+            //        .SelectMany(c => c.Students)
+            //        .GroupBy(s => s)
+            //        .Where(g => g.Count() > 1)
+            //        .Select(g => g.Key);
+            //foreach (var student in studentNamesAppearMoreThanOne)
+            //    Console.WriteLine(student);
+            //Console.WriteLine();
 
+            //// 4. Use SelectMany with result selector to get (CourseName, StudentName) pairs
+            //var resultSelector = courses
+            //    .SelectMany(c => c.Students, (c, s) => new { CourseName = c.Title, StudentName = s });
 
+            //foreach (var student in resultSelector)
+            //    Console.WriteLine(student);
+            //Console.WriteLine();
+
+            ///////////////////////
+            ////BONUS دي حته     
+            //var groupByTitle = courses
+            //    .GroupBy(c => c.Title);
+
+            //foreach (var group in groupByTitle)
+            //{
+            //    Console.WriteLine($"--------------------------{group.Key}--------------------------");
+
+            //    foreach (var student in group.SelectMany(c => c.Students))
+            //    {
+            //        Console.WriteLine("    " + student); 
+            //    }
+
+            //    Console.WriteLine();
+            //}
+
+            //Console.WriteLine();
             /////////////////////////////////////----- Q12 -----///////////////////////////////////////
+
+            //1.From employees: get the TOP 2 highest - paid employees per department.
+            var top2PerDept = employees
+                .GroupBy(e => e.Department)  //Deferred                  
+                .SelectMany(g => g          //Deferred 
+                .OrderByDescending(e => e.Salary)           //Deferred        
+                .Take(2));                              //Deferred               
+
+            foreach (var e in top2PerDept)
+                Console.WriteLine($"{e.Name} - {e.Department} - {e.Salary}");
+
+            Console.WriteLine();
+            //2. From courses: build a Dictionary<string, int>
+            var courseDict = courses
+                .Where(c => c.Students.Count > 2)      //Deferred      
+                .ToDictionary(c => c.Title, c => c.Students.Count);     // Immediate
+
+
+            foreach (var kv in courseDict)
+                Console.WriteLine($"{kv.Key} → {kv.Value}");
+
+            Console.WriteLine();
+
+
+            //3. Check:
+            bool anyEngineeringBelow8000 = employees
+                .Where(e => e.Department == "Engineering")    //Deferred 
+                .Any(e => e.Salary < 8000);              // Immediate   
+
+            bool allHRAbove5500 = employees
+                .Where(e => e.Department == "HR")         //Deferred   
+                .All(e => e.Salary > 5500);              // Immediate  
+
+            Console.WriteLine($"Any Engineering < 8000? {anyEngineeringBelow8000}");
+            Console.WriteLine($"All HR > 5500? {allHRAbove5500}");
+
+            Console.WriteLine();
+
+            //4. Project the top-2-per-dept result 
+            var top2WithRank = employees
+                .GroupBy(e => e.Department)         //Deferred 
+                .SelectMany(g => g                  //Deferred 
+                .OrderByDescending(e => e.Salary)       //Deferred 
+                .Take(2)                    //Deferred 
+                .Select((emp, index) => new      //Deferred 
+                {
+                    Rank = index + 1,
+                    Name = emp.Name,
+                    Department = emp.Department,
+                    Salary = emp.Salary,
+                    SeniorityLevel = emp.Salary > 9000 ? "Senior" : "Junior"
+                }));
+
+            foreach (var e in top2WithRank)
+            {
+                Console.WriteLine($"{e.Rank} - {e.Name} - {e.Department} - {e.Salary} - {e.SeniorityLevel}");
+            }
+
+            //5. For each step above — is execution deferred or immediate?
+
+            //---------------------------Deferred Execution-------------------------
+            // Where, Select, OrderBy,GroupBy, Take
+
+
+            //---------------------------Immediate Execution--------------------------
+            //ToList(), ToArray(),ToDictionary(), Any(),All()
 
 
         }
